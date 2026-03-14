@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.turbo/
+coverage/
+.env
+.env.*
+*.log
