@@ -1,6 +1,7 @@
 {
   "name": "@agent-layer/express",
   "version": "0.1.0",
+  "description": "Express middleware to make your API AI-agent-friendly — errors, rate limits, llms.txt, auth, meta, and discovery",
   "type": "module",
   "exports": {
     ".": {
@@ -11,12 +12,33 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "prepublishOnly": "pnpm build"
   },
+  "author": "Isaac Chang <chang.isaac97@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts.git",
+    "directory": "packages/express"
+  },
+  "homepage": "https://company.lightlayer.dev",
+  "bugs": {
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts/issues"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "llm",
+    "express",
+    "middleware",
+    "agent-native",
+    "rate-limit",
+    "llms-txt",
+    "openapi"
+  ],
   "dependencies": {
     "@agent-layer/core": "workspace:*"
   },

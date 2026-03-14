@@ -1,6 +1,7 @@
 {
   "name": "@agent-layer/core",
   "version": "0.1.0",
+  "description": "Core utilities for making web apps AI-agent-friendly — error envelopes, rate limiting, llms.txt, and discovery",
   "type": "module",
   "exports": {
     ".": {
@@ -13,8 +14,31 @@
   "types": "./dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "prepublishOnly": "pnpm build"
   },
+  "author": "Isaac Chang <chang.isaac97@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://company.lightlayer.dev",
+  "bugs": {
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts/issues"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "llm",
+    "middleware",
+    "agent-native",
+    "rate-limit",
+    "llms-txt",
+    "openapi",
+    "discovery"
+  ],
   "devDependencies": {
     "tsup": "^8.0.0",
     "typescript": "^5.4.0"
