@@ -7,6 +7,7 @@ import { llmsTxtRoutes } from "./llms-txt.js";
 import { discoveryRoutes } from "./discovery.js";
 import { agentMeta } from "./agent-meta.js";
 import { agentAuth } from "./agent-auth.js";
+import { agentAnalytics } from "./analytics.js";
 
 export { agentErrors, notFoundHandler } from "./agent-errors.js";
 export { rateLimits } from "./rate-limits.js";
@@ -14,6 +15,8 @@ export { llmsTxtRoutes } from "./llms-txt.js";
 export { discoveryRoutes } from "./discovery.js";
 export { agentMeta } from "./agent-meta.js";
 export { agentAuth } from "./agent-auth.js";
+export { agentAnalytics } from "./analytics.js";
+export type { AnalyticsConfig, AnalyticsInstance, AgentEvent } from "./analytics.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Express router.
@@ -21,6 +24,11 @@ export { agentAuth } from "./agent-auth.js";
  */
 export function agentLayer(config: AgentLayerConfig): Router {
   const router = createRouter();
+
+  // Analytics (earliest — captures all agent traffic)
+  if (config.analytics !== false && config.analytics) {
+    router.use(agentAnalytics(config.analytics));
+  }
 
   // Rate limiting (early — before routes)
   if (config.rateLimit !== false && config.rateLimit) {
