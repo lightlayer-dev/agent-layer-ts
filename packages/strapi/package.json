@@ -1,0 +1,56 @@
+{
+  "name": "@agent-layer/strapi",
+  "version": "0.1.0",
+  "description": "Strapi 4 plugin that auto-introspects content types and registers agent-layer middleware for AI-agent-friendly APIs",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "pnpm build"
+  },
+  "author": "Isaac Chang <chang.isaac97@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts.git",
+    "directory": "packages/strapi"
+  },
+  "homepage": "https://company.lightlayer.dev",
+  "bugs": {
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts/issues"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "llm",
+    "strapi",
+    "plugin",
+    "middleware",
+    "agent-native",
+    "rate-limit",
+    "llms-txt",
+    "openapi",
+    "discovery"
+  ],
+  "dependencies": {
+    "@agent-layer/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@strapi/strapi": "^4.0.0",
+    "@types/koa": "^2.15.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "peerDependencies": {
+    "@strapi/strapi": "^4.0.0"
+  }
+}
