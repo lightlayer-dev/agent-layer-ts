@@ -7,6 +7,7 @@ import { llmsTxtRoutes } from "./llms-txt.js";
 import { discoveryRoutes } from "./discovery.js";
 import { agentMeta } from "./agent-meta.js";
 import { agentAuth } from "./agent-auth.js";
+import { agentAnalytics } from "./analytics.js";
 import { apiKeyAuth } from "./api-keys.js";
 
 export { agentErrors, notFoundHandler } from "./agent-errors.js";
@@ -15,6 +16,8 @@ export { llmsTxtRoutes } from "./llms-txt.js";
 export { discoveryRoutes } from "./discovery.js";
 export { agentMeta } from "./agent-meta.js";
 export { agentAuth } from "./agent-auth.js";
+export { agentAnalytics } from "./analytics.js";
+export type { AnalyticsConfig, AnalyticsInstance, AgentEvent } from "./analytics.js";
 export { apiKeyAuth, requireScope } from "./api-keys.js";
 
 /**
@@ -24,7 +27,12 @@ export { apiKeyAuth, requireScope } from "./api-keys.js";
 export function agentLayer(config: AgentLayerConfig): Router {
   const router = createRouter();
 
-  // API key auth (earliest — before rate limiting)
+  // Analytics (earliest — captures all agent traffic)
+  if (config.analytics !== false && config.analytics) {
+    router.use(agentAnalytics(config.analytics));
+  }
+
+  // API key auth (early — before rate limiting)
   if (config.apiKeys !== false && config.apiKeys) {
     router.use(apiKeyAuth(config.apiKeys));
   }

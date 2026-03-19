@@ -163,5 +163,6 @@ export interface AgentLayerConfig {
   discovery?: false | DiscoveryConfig;
   agentMeta?: false | AgentMetaConfig;
   agentAuth?: false | AgentAuthConfig;
+  analytics?: false | import("./analytics.js").AnalyticsConfig;
   apiKeys?: false | ApiKeyConfig;
 }
