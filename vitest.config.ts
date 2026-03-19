@@ -5,6 +5,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@agent-layer/core": path.resolve(__dirname, "packages/core/src/index.ts"),
+      "@agent-layer/koa": path.resolve(__dirname, "packages/koa/src/index.ts"),
     },
   },
   test: {

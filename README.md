@@ -138,6 +138,7 @@ Overall Score: 82%
 |---------|-------------|
 | `@agent-layer/core` | Framework-agnostic core logic |
 | `@agent-layer/express` | Express.js middleware |
+| `@agent-layer/koa` | Koa middleware |
 
 Coming soon: Fastify, Next.js, Hono, and a [Python package](https://github.com/LightLayer-dev/agent-layer-python) for FastAPI/Django/Flask.
 
