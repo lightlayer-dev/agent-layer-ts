@@ -129,6 +129,16 @@ export interface AgentMetaConfig {
   metaTags?: Record<string, string>;
 }
 
+// ── API Keys ─────────────────────────────────────────────────────────────
+
+export type { ScopedApiKey, ApiKeyStore, ApiKeyValidationResult, CreateApiKeyOptions, CreateApiKeyResult } from "./api-keys.js";
+
+export interface ApiKeyConfig {
+  store: import("./api-keys.js").ApiKeyStore;
+  /** Header name to extract the API key from. Default: "X-Agent-Key". */
+  headerName?: string;
+}
+
 // ── Agent Auth ───────────────────────────────────────────────────────────
 
 export interface AgentAuthConfig {
@@ -154,4 +164,5 @@ export interface AgentLayerConfig {
   agentMeta?: false | AgentMetaConfig;
   agentAuth?: false | AgentAuthConfig;
   analytics?: false | import("./analytics.js").AnalyticsConfig;
+  apiKeys?: false | ApiKeyConfig;
 }

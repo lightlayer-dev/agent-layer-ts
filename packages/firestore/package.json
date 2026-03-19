@@ -1,0 +1,63 @@
+{
+  "name": "@agent-layer/firestore",
+  "version": "0.1.0",
+  "description": "Firestore adapter for agent-layer — makes Firestore collections agent-discoverable and queryable",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "pnpm build"
+  },
+  "author": "Isaac Chang <chang.isaac97@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts.git",
+    "directory": "packages/firestore"
+  },
+  "homepage": "https://company.lightlayer.dev",
+  "bugs": {
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts/issues"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "llm",
+    "firestore",
+    "firebase",
+    "agent-native",
+    "openapi",
+    "llms-txt"
+  ],
+  "dependencies": {
+    "@agent-layer/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/koa": "^2.15.0",
+    "@types/koa__router": "^12.0.4",
+    "express": "^4.18.0",
+    "koa": "^2.15.0",
+    "@koa/router": "^12.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  },
+  "peerDependencies": {
+    "firebase-admin": "^11.0.0 || ^12.0.0 || ^13.0.0"
+  },
+  "peerDependenciesMeta": {
+    "firebase-admin": {
+      "optional": true
+    }
+  }
+}

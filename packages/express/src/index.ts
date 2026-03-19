@@ -8,6 +8,7 @@ import { discoveryRoutes } from "./discovery.js";
 import { agentMeta } from "./agent-meta.js";
 import { agentAuth } from "./agent-auth.js";
 import { agentAnalytics } from "./analytics.js";
+import { apiKeyAuth } from "./api-keys.js";
 
 export { agentErrors, notFoundHandler } from "./agent-errors.js";
 export { rateLimits } from "./rate-limits.js";
@@ -17,6 +18,7 @@ export { agentMeta } from "./agent-meta.js";
 export { agentAuth } from "./agent-auth.js";
 export { agentAnalytics } from "./analytics.js";
 export type { AnalyticsConfig, AnalyticsInstance, AgentEvent } from "./analytics.js";
+export { apiKeyAuth, requireScope } from "./api-keys.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Express router.
@@ -28,6 +30,11 @@ export function agentLayer(config: AgentLayerConfig): Router {
   // Analytics (earliest — captures all agent traffic)
   if (config.analytics !== false && config.analytics) {
     router.use(agentAnalytics(config.analytics));
+  }
+
+  // API key auth (early — before rate limiting)
+  if (config.apiKeys !== false && config.apiKeys) {
+    router.use(apiKeyAuth(config.apiKeys));
   }
 
   // Rate limiting (early — before routes)
