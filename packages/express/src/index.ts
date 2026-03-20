@@ -9,6 +9,7 @@ import { agentMeta } from "./agent-meta.js";
 import { agentAuth } from "./agent-auth.js";
 import { agentAnalytics } from "./analytics.js";
 import { apiKeyAuth } from "./api-keys.js";
+import { a2aRoutes } from "./a2a.js";
 
 export { agentErrors, notFoundHandler } from "./agent-errors.js";
 export { rateLimits } from "./rate-limits.js";
@@ -21,6 +22,7 @@ export type { AnalyticsConfig, AnalyticsInstance, AgentEvent } from "./analytics
 export { apiKeyAuth, requireScope } from "./api-keys.js";
 export { x402Payment } from "./x402.js";
 export type { X402Config, X402RouteConfig } from "./x402.js";
+export { a2aRoutes } from "./a2a.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Express router.
@@ -61,6 +63,12 @@ export function agentLayer(config: AgentLayerConfig): Router {
     const handlers = discoveryRoutes(config.discovery);
     router.get("/.well-known/ai", handlers.wellKnownAi);
     router.get("/openapi.json", handlers.openApiJson);
+  }
+
+  // A2A Agent Card (/.well-known/agent.json)
+  if (config.a2a !== false && config.a2a) {
+    const handlers = a2aRoutes(config.a2a);
+    router.get("/.well-known/agent.json", handlers.agentCard);
   }
 
   // Auth discovery

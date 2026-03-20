@@ -1,3 +1,13 @@
+export { generateAgentCard, validateAgentCard } from "./a2a.js";
+export type {
+  A2AAgentCard,
+  A2ASkill,
+  A2AAuthScheme,
+  A2AProvider,
+  A2ACapabilities,
+  A2AContentType,
+  A2AConfig,
+} from "./a2a.js";
 export { formatError, AgentError, notFoundError, rateLimitError } from "./errors.js";
 export { MemoryStore, createRateLimiter } from "./rate-limit.js";
 export { generateLlmsTxt, generateLlmsFullTxt } from "./llms-txt.js";
