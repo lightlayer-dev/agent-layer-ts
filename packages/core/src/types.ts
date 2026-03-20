@@ -166,4 +166,5 @@ export interface AgentLayerConfig {
   analytics?: false | import("./analytics.js").AnalyticsConfig;
   apiKeys?: false | ApiKeyConfig;
   a2a?: false | import("./a2a.js").A2AConfig;
+  agentIdentity?: false | import("./agent-identity.js").AgentIdentityConfig;
 }

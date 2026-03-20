@@ -8,6 +8,25 @@ export type {
   A2AContentType,
   A2AConfig,
 } from "./a2a.js";
+export {
+  parseSpiffeId,
+  isSpiffeTrusted,
+  decodeJwtClaims,
+  extractClaims,
+  validateClaims,
+  evaluateAuthz,
+  buildAuditEvent,
+} from "./agent-identity.js";
+export type {
+  SpiffeId,
+  AgentIdentityClaims,
+  AgentAuthzPolicy,
+  AuthzContext,
+  AuthzResult,
+  AgentIdentityConfig,
+  TokenValidationError,
+  AgentIdentityAuditEvent,
+} from "./agent-identity.js";
 export { formatError, AgentError, notFoundError, rateLimitError } from "./errors.js";
 export { MemoryStore, createRateLimiter } from "./rate-limit.js";
 export { generateLlmsTxt, generateLlmsFullTxt } from "./llms-txt.js";
