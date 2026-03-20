@@ -19,6 +19,8 @@ export { agentAuth } from "./agent-auth.js";
 export { agentAnalytics } from "./analytics.js";
 export type { AnalyticsConfig, AnalyticsInstance, AgentEvent } from "./analytics.js";
 export { apiKeyAuth, requireScope } from "./api-keys.js";
+export { x402Payment } from "./x402.js";
+export type { X402Config, X402RouteConfig } from "./x402.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Express router.

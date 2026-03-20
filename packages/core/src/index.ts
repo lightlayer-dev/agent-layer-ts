@@ -33,3 +33,29 @@ export type {
   CreateApiKeyResult,
   AgentLayerConfig,
 } from "./types.js";
+export {
+  HttpFacilitatorClient,
+  resolvePrice,
+  buildRequirements,
+  buildPaymentRequired,
+  encodePaymentRequired,
+  decodePaymentPayload,
+  matchRoute,
+  X402_VERSION,
+  HEADER_PAYMENT_REQUIRED,
+  HEADER_PAYMENT_SIGNATURE,
+  HEADER_PAYMENT_RESPONSE,
+} from "./x402.js";
+export type {
+  Network,
+  Price,
+  X402Config,
+  X402RouteConfig,
+  PaymentRequirements,
+  PaymentRequired,
+  PaymentPayload,
+  ResourceInfo,
+  VerifyResponse,
+  SettleResponse,
+  FacilitatorClient,
+} from "./x402.js";

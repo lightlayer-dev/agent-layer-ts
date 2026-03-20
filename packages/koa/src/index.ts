@@ -15,6 +15,8 @@ export { discoveryRoutes } from "./discovery.js";
 export { agentMeta } from "./agent-meta.js";
 export { agentAuth } from "./agent-auth.js";
 export { apiKeyAuth, requireScope } from "./api-keys.js";
+export { x402Payment } from "./x402.js";
+export type { X402Config, X402RouteConfig } from "./x402.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Koa Router.

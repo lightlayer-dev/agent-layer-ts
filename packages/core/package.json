@@ -7,6 +7,10 @@
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./x402": {
+      "import": "./dist/x402.js",
+      "require": "./dist/x402.cjs"
     }
   },
   "main": "./dist/index.cjs",
