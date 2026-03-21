@@ -8,6 +8,7 @@ import { agentMeta } from "./agent-meta.js";
 import { agentAuth } from "./agent-auth.js";
 import { apiKeyAuth } from "./api-keys.js";
 import { a2aRoutes } from "./a2a.js";
+import { agentsTxtRoutes } from "./agents-txt.js";
 
 export { agentErrors, notFoundHandler } from "./agent-errors.js";
 export { rateLimits } from "./rate-limits.js";
@@ -20,6 +21,8 @@ export { x402Payment } from "./x402.js";
 export type { X402Config, X402RouteConfig } from "./x402.js";
 export { a2aRoutes } from "./a2a.js";
 export { agentIdentity } from "./agent-identity.js";
+export { agentsTxtRoutes } from "./agents-txt.js";
+export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Koa Router.
@@ -61,6 +64,15 @@ export function agentLayer(config: AgentLayerConfig): Router {
   if (config.a2a !== false && config.a2a) {
     const handlers = a2aRoutes(config.a2a);
     router.get("/.well-known/agent.json", handlers.agentCard);
+  }
+
+  // agents.txt (robots.txt for AI agents)
+  if (config.agentsTxt !== false && config.agentsTxt) {
+    const handlers = agentsTxtRoutes(config.agentsTxt);
+    router.get("/agents.txt", handlers.agentsTxt);
+    if (config.agentsTxt.enforce) {
+      router.use(handlers.enforce);
+    }
   }
 
   // Auth discovery

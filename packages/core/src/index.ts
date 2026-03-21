@@ -1,3 +1,9 @@
+export { generateAgentsTxt, parseAgentsTxt, isAgentAllowed } from "./agents-txt.js";
+export type {
+  AgentsTxtConfig,
+  AgentsTxtRule,
+  AgentsTxtRateLimit,
+} from "./agents-txt.js";
 export { generateAgentCard, validateAgentCard } from "./a2a.js";
 export type {
   A2AAgentCard,
