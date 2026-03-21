@@ -20,6 +20,8 @@ export { x402Payment } from "./x402.js";
 export type { X402Config, X402RouteConfig } from "./x402.js";
 export { a2aRoutes } from "./a2a.js";
 export { agentIdentity } from "./agent-identity.js";
+export { unifiedDiscovery } from "./unified-discovery.js";
+export type { UnifiedDiscoveryHandlers } from "./unified-discovery.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Koa Router.
