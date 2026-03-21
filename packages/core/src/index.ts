@@ -1,4 +1,13 @@
 export { generateAgentsTxt, parseAgentsTxt, isAgentAllowed } from "./agents-txt.js";
+export { generateUnifiedDiscovery } from "./unified-discovery.js";
+export type {
+  UnifiedDiscoveryConfig,
+  UnifiedDiscoveryOutput,
+  UnifiedDiscoveryFormats,
+  UnifiedSkill,
+  UnifiedAuth,
+  UnifiedAgentRule,
+} from "./unified-discovery.js";
 export type {
   AgentsTxtConfig,
   AgentsTxtRule,

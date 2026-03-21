@@ -27,6 +27,9 @@ export { a2aRoutes } from "./a2a.js";
 export { agentIdentity } from "./agent-identity.js";
 export { agentsTxtRoutes } from "./agents-txt.js";
 export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
+export { unifiedDiscoveryRoutes } from "./unified-discovery.js";
+export { mcpServer } from "./mcp.js";
+export type { McpServerConfig } from "./mcp.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Express router.
@@ -82,6 +85,12 @@ export function agentLayer(config: AgentLayerConfig): Router {
     if (config.agentsTxt.enforce) {
       router.use(handlers.enforce);
     }
+  }
+
+  // MCP server (Model Context Protocol)
+  if (config.mcp !== false && config.mcp) {
+    const mcp = mcpServer(config.mcp);
+    router.use("/mcp", mcp.router());
   }
 
   // Auth discovery
