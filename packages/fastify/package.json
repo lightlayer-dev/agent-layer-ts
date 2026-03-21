@@ -1,0 +1,56 @@
+{
+  "name": "@agent-layer/fastify",
+  "version": "0.1.0",
+  "description": "Fastify plugin to make your API AI-agent-friendly — errors, rate limits, llms.txt, auth, meta, and discovery",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "pnpm build"
+  },
+  "author": "Isaac Chang <chang.isaac97@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts.git",
+    "directory": "packages/fastify"
+  },
+  "homepage": "https://company.lightlayer.dev",
+  "bugs": {
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts/issues"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "llm",
+    "fastify",
+    "plugin",
+    "agent-native",
+    "rate-limit",
+    "llms-txt",
+    "openapi"
+  ],
+  "dependencies": {
+    "@agent-layer/core": "workspace:*",
+    "fastify-plugin": "^5.1.0"
+  },
+  "devDependencies": {
+    "fastify": "^5.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "peerDependencies": {
+    "fastify": ">=4.0.0"
+  }
+}
