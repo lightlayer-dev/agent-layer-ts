@@ -63,6 +63,24 @@ export type {
   AgentLayerConfig,
 } from "./types.js";
 export {
+  generateUnifiedAIManifest,
+  generateUnifiedAgentCard,
+  generateUnifiedLlmsTxt,
+  generateUnifiedLlmsFullTxt,
+  generateAgentsTxt,
+  generateAllDiscovery,
+  isFormatEnabled,
+} from "./unified-discovery.js";
+export type {
+  AgentsTxtRule,
+  AgentsTxtBlock,
+  AgentsTxtConfig,
+  DiscoveryFormats,
+  UnifiedAuthConfig,
+  UnifiedSkill,
+  UnifiedDiscoveryConfig,
+} from "./unified-discovery.js";
+export {
   HttpFacilitatorClient,
   resolvePrice,
   buildRequirements,
