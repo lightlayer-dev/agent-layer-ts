@@ -132,16 +132,67 @@ Overall Score: 82%
 
 [agent-bench](https://github.com/LightLayer-dev/agent-bench) is our open-source benchmark that scores websites on agent-readiness.
 
+## New: Agent Gateway Features
+
+### x402 Payments — HTTP-native micropayments
+
+Accept payments from AI agents via the [x402 protocol](https://x402.org). Agents hit a protected endpoint, get `402 Payment Required`, pay with USDC stablecoin, and retry:
+
+```ts
+app.use(agentLayer({
+  x402: {
+    facilitatorUrl: "https://x402.org/facilitator",
+    payeeAddress: "0xYourWallet",
+    network: "base-sepolia",
+  },
+}));
+```
+
+### A2A Agent Card — machine-readable capabilities
+
+Serve `/.well-known/agent.json` per [Google's A2A protocol](https://github.com/google/A2A):
+
+```ts
+app.use(agentLayer({
+  a2a: {
+    card: {
+      name: "My Service",
+      description: "What my service does",
+      skills: [{ id: "search", name: "Search", description: "Search things" }],
+    },
+  },
+}));
+```
+
+### Agent Identity — credential verification
+
+Verify agent credentials per the [IETF draft-klrc-aiagent-auth](https://datatracker.ietf.org/doc/draft-klrc-aiagent-auth/):
+
+```ts
+app.use(agentLayer({
+  agentIdentity: {
+    issuer: "https://my-app.example.com",
+    audience: "https://my-app.example.com",
+    jwksUri: "https://my-app.example.com/.well-known/jwks.json",
+  },
+}));
+```
+
+### Analytics — agent traffic telemetry
+
+Detect AI agent traffic, collect telemetry, and batch flush to your analytics backend.
+
 ## Packages
 
 | Package | Description |
 |---------|-------------|
-| `@agent-layer/core` | Framework-agnostic core logic |
+| `@agent-layer/core` | Framework-agnostic core logic (errors, rate limits, llms.txt, discovery, x402, A2A, agent identity, analytics) |
 | `@agent-layer/express` | Express.js middleware |
 | `@agent-layer/koa` | Koa middleware |
 | `@agent-layer/firestore` | Firestore adapter — schema declaration, query translation, Koa/Express middleware |
+| `@agent-layer/strapi` | Strapi plugin — auto-generate agent endpoints from content types |
 
-Coming soon: Fastify, Next.js, Hono, and a [Python package](https://github.com/LightLayer-dev/agent-layer-python) for FastAPI/Django/Flask.
+Python version: **[agent-layer-python](https://github.com/LightLayer-dev/agent-layer-python)** — FastAPI, Flask, and Django support.
 
 ## Development
 
