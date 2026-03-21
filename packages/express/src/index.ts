@@ -26,6 +26,8 @@ export { a2aRoutes } from "./a2a.js";
 export { agentIdentity } from "./agent-identity.js";
 export { unifiedDiscovery } from "./unified-discovery.js";
 export type { UnifiedDiscoveryHandlers } from "./unified-discovery.js";
+export { mcpServer } from "./mcp.js";
+export type { McpServerConfig } from "./mcp.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Express router.

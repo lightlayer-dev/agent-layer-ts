@@ -1,3 +1,19 @@
+export {
+  formatToolName,
+  buildInputSchema,
+  generateToolDefinitions,
+  generateServerInfo,
+  parseToolName,
+  handleJsonRpc,
+} from "./mcp.js";
+export type {
+  McpToolDefinition,
+  McpServerInfo,
+  McpServerConfig,
+  JsonRpcRequest,
+  JsonRpcResponse,
+  ToolCallHandler,
+} from "./mcp.js";
 export { generateAgentCard, validateAgentCard } from "./a2a.js";
 export type {
   A2AAgentCard,
