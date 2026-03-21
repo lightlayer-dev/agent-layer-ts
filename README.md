@@ -178,6 +178,30 @@ app.use(agentLayer({
 }));
 ```
 
+### MCP Server — auto-expose API routes as MCP tools
+
+Generate a Model Context Protocol (MCP) server from your existing API routes. AI agents can discover and call your endpoints via the standard MCP JSON-RPC protocol.
+
+```ts
+import { mcpServer } from '@agent-layer/express';
+
+const mcp = mcpServer({
+  name: 'my-api',
+  version: '1.0.0',
+  instructions: 'Use these tools to manage users',
+  routes: [
+    { method: 'GET', path: '/api/users', summary: 'List users',
+      parameters: [{ name: 'limit', in: 'query', description: 'Max results' }] },
+    { method: 'POST', path: '/api/users', summary: 'Create user',
+      parameters: [{ name: 'name', in: 'body', required: true }] },
+  ],
+});
+
+app.use('/mcp', mcp.router());
+```
+
+Supports Streamable HTTP transport (POST for JSON-RPC, GET for SSE, DELETE for session end).
+
 ### Analytics — agent traffic telemetry
 
 Detect AI agent traffic, collect telemetry, and batch flush to your analytics backend.
@@ -186,9 +210,11 @@ Detect AI agent traffic, collect telemetry, and batch flush to your analytics ba
 
 | Package | Description |
 |---------|-------------|
-| `@agent-layer/core` | Framework-agnostic core logic (errors, rate limits, llms.txt, discovery, x402, A2A, agent identity, analytics) |
+| `@agent-layer/core` | Framework-agnostic core logic (errors, rate limits, llms.txt, discovery, x402, A2A, agent identity, MCP, analytics) |
 | `@agent-layer/express` | Express.js middleware |
 | `@agent-layer/koa` | Koa middleware |
+| `@agent-layer/hono` | Hono middleware |
+| `@agent-layer/fastify` | Fastify plugin |
 | `@agent-layer/firestore` | Firestore adapter — schema declaration, query translation, Koa/Express middleware |
 | `@agent-layer/strapi` | Strapi plugin — auto-generate agent endpoints from content types |
 
@@ -199,7 +225,7 @@ Python version: **[agent-layer-python](https://github.com/LightLayer-dev/agent-l
 ```bash
 pnpm install
 pnpm build
-pnpm test    # 95 tests
+pnpm test    # 580 tests
 ```
 
 ## License
