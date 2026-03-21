@@ -81,6 +81,16 @@ export type {
   UnifiedDiscoveryConfig,
 } from "./unified-discovery.js";
 export {
+  generateAgentsTxt as generateStandaloneAgentsTxt,
+  parseAgentsTxt,
+  isAgentAllowed,
+} from "./agents-txt.js";
+export type {
+  AgentsTxtConfig as StandaloneAgentsTxtConfig,
+  AgentsTxtRule as StandaloneAgentsTxtRule,
+  AgentsTxtRateLimit,
+} from "./agents-txt.js";
+export {
   HttpFacilitatorClient,
   resolvePrice,
   buildRequirements,

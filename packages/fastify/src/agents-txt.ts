@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import fp from "fastify-plugin";
-import { generateAgentsTxt, isAgentAllowed } from "@agent-layer/core";
-import type { AgentsTxtConfig } from "@agent-layer/core";
+import { generateStandaloneAgentsTxt as generateAgentsTxt, isAgentAllowed } from "@agent-layer/core";
+import type { StandaloneAgentsTxtConfig as AgentsTxtConfig } from "@agent-layer/core";
 
 export interface AgentsTxtMiddlewareConfig extends AgentsTxtConfig {
   enforce?: boolean;
