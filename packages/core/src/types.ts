@@ -167,4 +167,6 @@ export interface AgentLayerConfig {
   apiKeys?: false | ApiKeyConfig;
   a2a?: false | import("./a2a.js").A2AConfig;
   agentIdentity?: false | import("./agent-identity.js").AgentIdentityConfig;
+  agentsTxt?: false | (import("./agents-txt.js").AgentsTxtConfig & { enforce?: boolean });
+  unifiedDiscovery?: false | import("./unified-discovery.js").UnifiedDiscoveryConfig;
 }
