@@ -171,6 +171,37 @@ export type {
 // ── Shared middleware config ────────────────────────────────────────────
 export type { AgentsTxtMiddlewareConfig } from "./agents-txt-middleware.js";
 
+// ── AG-UI (Agent-User Interaction) Protocol ─────────────────────────────
+export {
+  encodeEvent,
+  encodeEvents,
+  createAgUiEmitter,
+  AG_UI_HEADERS,
+} from "./ag-ui.js";
+export type {
+  AgUiEventType,
+  AgUiRole,
+  AgUiEvent,
+  AgUiEmitter,
+  AgUiEmitterOptions,
+  BaseEvent,
+  RunStartedEvent,
+  RunFinishedEvent,
+  RunErrorEvent,
+  StepStartedEvent,
+  StepFinishedEvent,
+  TextMessageStartEvent,
+  TextMessageContentEvent,
+  TextMessageEndEvent,
+  ToolCallStartEvent,
+  ToolCallArgsEvent,
+  ToolCallEndEvent,
+  ToolCallResultEvent,
+  StateSnapshotEvent,
+  StateDeltaEvent,
+  CustomEvent,
+} from "./ag-ui.js";
+
 // ── Test utilities ──────────────────────────────────────────────────────
 export {
   makeJwt,
