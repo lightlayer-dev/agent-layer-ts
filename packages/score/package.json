@@ -1,0 +1,53 @@
+{
+  "name": "@agent-layer/score",
+  "version": "0.1.0",
+  "description": "Agent-readiness score CLI — Lighthouse for agent-friendly APIs",
+  "type": "module",
+  "bin": {
+    "agent-layer-score": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "pnpm build"
+  },
+  "author": "Isaac Chang <chang.isaac97@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts.git",
+    "directory": "packages/score"
+  },
+  "homepage": "https://company.lightlayer.dev",
+  "bugs": {
+    "url": "https://github.com/lightlayer-dev/agent-layer-ts/issues"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "llm",
+    "agent-readiness",
+    "score",
+    "lighthouse",
+    "cli",
+    "audit"
+  ],
+  "dependencies": {
+    "commander": "^12.0.0",
+    "chalk": "^5.3.0",
+    "ora": "^8.0.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  }
+}

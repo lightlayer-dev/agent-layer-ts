@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+/**
+ * CLI entry point for agent-layer-score.
+ *
+ * Usage: npx @agent-layer/score https://example.com
+ */
+
+import { Command } from "commander";
+import ora from "ora";
+import { scan } from "./scanner.js";
+import { formatReport, formatJson, badgeUrl } from "./reporter.js";
+
+const program = new Command();
+
+program
+  .name("agent-layer-score")
+  .description("Score any API or website for agent-readiness — like Lighthouse for AI agents")
+  .version("0.1.0")
+  .argument("<url>", "URL to score")
+  .option("--json", "Output results as JSON")
+  .option("--badge", "Output a shields.io badge URL")
+  .option("--timeout <ms>", "Request timeout in ms", "10000")
+  .option("--user-agent <string>", "Custom User-Agent string")
+  .action(async (url: string, options: Record<string, string | boolean | undefined>) => {
+    const spinner = ora(`Scanning ${url}...`).start();
+
+    try {
+      const report = await scan({
+        url,
+        timeoutMs: parseInt(options.timeout as string, 10) || 10000,
+        userAgent: options["user-agent"] as string | undefined,
+      });
+
+      spinner.stop();
+
+      if (options.json) {
+        console.log(formatJson(report));
+      } else if (options.badge) {
+        console.log(badgeUrl(report.score));
+        console.log(`\nMarkdown: ![Agent-Ready](${badgeUrl(report.score)})`);
+      } else {
+        console.log(formatReport(report));
+      }
+
+      // Exit with non-zero if score is very low
+      if (report.score < 20) {
+        process.exit(1);
+      }
+    } catch (error) {
+      spinner.fail("Scan failed");
+      console.error(error instanceof Error ? error.message : error);
+      process.exit(1);
+    }
+  });
+
+program.parse();
