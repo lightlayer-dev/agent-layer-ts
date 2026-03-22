@@ -6,8 +6,10 @@ import { llmsTxtRoutes } from "./llms-txt.js";
 import { discoveryRoutes } from "./discovery.js";
 import { agentMeta } from "./agent-meta.js";
 import { agentAuth } from "./agent-auth.js";
+import { agentAnalytics } from "./analytics.js";
 import { apiKeyAuth } from "./api-keys.js";
 import { a2aRoutes } from "./a2a.js";
+import { agentsTxtRoutes } from "./agents-txt.js";
 
 export { agentErrors, notFoundHandler } from "./agent-errors.js";
 export { rateLimits } from "./rate-limits.js";
@@ -15,6 +17,8 @@ export { llmsTxtRoutes } from "./llms-txt.js";
 export { discoveryRoutes } from "./discovery.js";
 export { agentMeta } from "./agent-meta.js";
 export { agentAuth } from "./agent-auth.js";
+export { agentAnalytics } from "./analytics.js";
+export type { AnalyticsConfig, AnalyticsInstance, AgentEvent } from "./analytics.js";
 export { apiKeyAuth, requireScope } from "./api-keys.js";
 export { x402Payment } from "./x402.js";
 export type { X402Config, X402RouteConfig } from "./x402.js";
@@ -22,6 +26,10 @@ export { a2aRoutes } from "./a2a.js";
 export { agentIdentity } from "./agent-identity.js";
 export { unifiedDiscovery } from "./unified-discovery.js";
 export type { UnifiedDiscoveryHandlers } from "./unified-discovery.js";
+export { mcpServer } from "./mcp.js";
+export type { McpServerConfig } from "./mcp.js";
+export { agentsTxtRoutes } from "./agents-txt.js";
+export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Koa Router.
@@ -30,7 +38,12 @@ export type { UnifiedDiscoveryHandlers } from "./unified-discovery.js";
 export function agentLayer(config: AgentLayerConfig): Router {
   const router = new Router();
 
-  // API key auth (earliest — before rate limiting)
+  // Analytics (earliest — captures all agent traffic)
+  if (config.analytics !== false && config.analytics) {
+    router.use(agentAnalytics(config.analytics));
+  }
+
+  // API key auth (early — before rate limiting)
   if (config.apiKeys !== false && config.apiKeys) {
     router.use(apiKeyAuth(config.apiKeys));
   }
@@ -63,6 +76,15 @@ export function agentLayer(config: AgentLayerConfig): Router {
   if (config.a2a !== false && config.a2a) {
     const handlers = a2aRoutes(config.a2a);
     router.get("/.well-known/agent.json", handlers.agentCard);
+  }
+
+  // agents.txt (robots.txt for AI agents)
+  if (config.agentsTxt !== false && config.agentsTxt) {
+    const handlers = agentsTxtRoutes(config.agentsTxt);
+    router.get("/agents.txt", (ctx) => handlers.agentsTxt(ctx));
+    if (config.agentsTxt.enforce) {
+      router.use(handlers.enforce);
+    }
   }
 
   // Auth discovery

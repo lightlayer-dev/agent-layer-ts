@@ -37,8 +37,8 @@ export interface AgentsTxtBlock {
   rules: AgentsTxtRule[];
 }
 
-/** Configuration for agents.txt generation */
-export interface AgentsTxtConfig {
+/** Configuration for agents.txt generation (unified discovery variant) */
+export interface UnifiedAgentsTxtConfig {
   /** Blocks of user-agent + rules */
   blocks: AgentsTxtBlock[];
   /** Optional sitemap URL for agents */
@@ -124,7 +124,7 @@ export interface UnifiedDiscoveryConfig {
   /** Route metadata for llms-full.txt auto-generation */
   routes?: RouteMetadata[];
   /** Agents.txt rules (if agents.txt format is enabled) */
-  agentsTxt?: AgentsTxtConfig;
+  agentsTxt?: UnifiedAgentsTxtConfig;
   /** Which formats to serve. All enabled by default. */
   formats?: DiscoveryFormats;
   /** Extra llms.txt sections (appended after auto-generated content) */

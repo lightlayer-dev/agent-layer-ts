@@ -90,12 +90,14 @@ export {
 export type {
   AgentsTxtRule,
   AgentsTxtBlock,
-  AgentsTxtConfig,
+  UnifiedAgentsTxtConfig,
   DiscoveryFormats,
   UnifiedAuthConfig,
   UnifiedSkill,
   UnifiedDiscoveryConfig,
 } from "./unified-discovery.js";
+// Backwards compat: re-export UnifiedAgentsTxtConfig as AgentsTxtConfig for existing consumers
+export type { UnifiedAgentsTxtConfig as AgentsTxtConfig } from "./unified-discovery.js";
 export {
   generateAgentsTxt as generateStandaloneAgentsTxt,
   parseAgentsTxt,
@@ -132,3 +134,49 @@ export type {
   SettleResponse,
   FacilitatorClient,
 } from "./x402.js";
+
+// ── Core handler functions (framework-agnostic) ─────────────────────────
+export {
+  prefersJson,
+  renderHtmlError,
+  buildErrorEnvelope,
+  buildErrorResponse,
+  buildNotFoundResponse,
+} from "./error-handler.js";
+export type { ErrorResponseAction } from "./error-handler.js";
+
+export {
+  buildOauthDiscoveryDocument,
+  buildWwwAuthenticate,
+  checkRequireAuth,
+} from "./auth-handler.js";
+export type { RequireAuthResult } from "./auth-handler.js";
+
+export {
+  extractAndVerifyToken,
+  handleRequireIdentity,
+  handleOptionalIdentity,
+} from "./identity-handler.js";
+export type { IdentityError, IdentitySuccess } from "./identity-handler.js";
+
+export { handleX402 } from "./x402-handler.js";
+export type {
+  X402Skip,
+  X402PaymentRequired,
+  X402Success,
+  X402Error,
+  X402FlowResult,
+} from "./x402-handler.js";
+
+// ── Shared middleware config ────────────────────────────────────────────
+export type { AgentsTxtMiddlewareConfig } from "./agents-txt-middleware.js";
+
+// ── Test utilities ──────────────────────────────────────────────────────
+export {
+  makeJwt,
+  validJwtPayload,
+  baseIdentityConfig,
+  testRoutes,
+  testMcpConfig,
+  makeCustomVerifier,
+} from "./test-utils.js";
