@@ -28,4 +28,5 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: pnpm test
+      - name: Test
+        run: pnpm vitest run ${{ matrix.node-version == 20 && '--pool forks' || '' }}
