@@ -29,6 +29,8 @@ export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
 export { mcpServer } from "./mcp.js";
 export type { McpServerConfig } from "./mcp.js";
 export { unifiedDiscovery } from "./unified-discovery.js";
+export { agUiStream } from "./ag-ui.js";
+export type { AgUiStreamHandler, AgUiMiddlewareOptions } from "./ag-ui.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Hono app.

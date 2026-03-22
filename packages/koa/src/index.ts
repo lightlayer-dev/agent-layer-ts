@@ -28,6 +28,8 @@ export { unifiedDiscovery } from "./unified-discovery.js";
 export type { UnifiedDiscoveryHandlers } from "./unified-discovery.js";
 export { mcpServer } from "./mcp.js";
 export type { McpServerConfig } from "./mcp.js";
+export { agUiStream } from "./ag-ui.js";
+export type { AgUiStreamHandler, AgUiMiddlewareOptions } from "./ag-ui.js";
 export { agentsTxtRoutes } from "./agents-txt.js";
 export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
 
