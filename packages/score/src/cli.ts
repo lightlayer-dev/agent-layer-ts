@@ -21,6 +21,7 @@ program
   .option("--json", "Output results as JSON")
   .option("--badge", "Output a shields.io badge URL")
   .option("--timeout <ms>", "Request timeout in ms", "10000")
+  .option("--threshold <score>", "Minimum score (0-100). Exit 1 if below threshold.")
   .option("--user-agent <string>", "Custom User-Agent string")
   .action(async (url: string, options: Record<string, string | boolean | undefined>) => {
     const spinner = ora(`Scanning ${url}...`).start();
@@ -43,8 +44,14 @@ program
         console.log(formatReport(report));
       }
 
-      // Exit with non-zero if score is very low
-      if (report.score < 20) {
+      const threshold = options.threshold
+        ? parseInt(options.threshold as string, 10)
+        : 20;
+
+      if (report.score < threshold) {
+        console.error(
+          `\nScore ${report.score} is below threshold ${threshold}`,
+        );
         process.exit(1);
       }
     } catch (error) {
