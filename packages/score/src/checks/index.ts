@@ -13,6 +13,8 @@ export { checkCors } from "./cors.js";
 export { checkSecurityHeaders } from "./security-headers.js";
 export { checkResponseTime } from "./response-time.js";
 export { checkX402 } from "./x402.js";
+export { checkAgentsTxt } from "./agents-txt.js";
+export { checkAgUi } from "./ag-ui.js";
 
 import type { CheckFn } from "../types.js";
 import { checkStructuredErrors } from "./structured-errors.js";
@@ -26,6 +28,8 @@ import { checkCors } from "./cors.js";
 import { checkSecurityHeaders } from "./security-headers.js";
 import { checkResponseTime } from "./response-time.js";
 import { checkX402 } from "./x402.js";
+import { checkAgentsTxt } from "./agents-txt.js";
+import { checkAgUi } from "./ag-ui.js";
 
 /** All checks in execution order. */
 export const allChecks: CheckFn[] = [
@@ -40,4 +44,6 @@ export const allChecks: CheckFn[] = [
   checkSecurityHeaders,
   checkResponseTime,
   checkX402,
+  checkAgentsTxt,
+  checkAgUi,
 ];
