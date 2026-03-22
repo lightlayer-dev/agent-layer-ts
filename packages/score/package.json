@@ -18,6 +18,8 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "prepublishOnly": "pnpm build"
   },
   "author": "Isaac Chang <chang.isaac97@gmail.com>",
@@ -48,6 +50,7 @@
   },
   "devDependencies": {
     "tsup": "^8.0.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "vitest": "^3.0.0"
   }
 }

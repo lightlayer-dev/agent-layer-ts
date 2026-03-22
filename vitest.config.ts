@@ -9,6 +9,7 @@ export default defineConfig({
       "@agent-layer/koa": path.resolve(__dirname, "packages/koa/src/index.ts"),
       "@agent-layer/hono": path.resolve(__dirname, "packages/hono/src/index.ts"),
       "@agent-layer/fastify": path.resolve(__dirname, "packages/fastify/src/index.ts"),
+      "@agent-layer/score": path.resolve(__dirname, "packages/score/src/index.ts"),
       "@agent-layer/firestore": path.resolve(__dirname, "packages/firestore/src/index.ts"),
       "@agent-layer/strapi": path.resolve(__dirname, "packages/strapi/src/index.ts"),
     },
