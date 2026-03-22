@@ -1,0 +1,219 @@
+name: "Agent-Readiness Score"
+description: "Score your API/website for AI agent-readiness in CI. Like Lighthouse, but for AI agents."
+author: "LightLayer"
+
+branding:
+  icon: "shield"
+  color: "green"
+
+inputs:
+  url:
+    description: "URL to score for agent-readiness"
+    required: true
+  threshold:
+    description: "Minimum score (0-100). Fails the step if below threshold."
+    required: false
+    default: "0"
+  json:
+    description: "Output results as JSON (true/false)"
+    required: false
+    default: "false"
+  comment:
+    description: "Post results as a PR comment (true/false)"
+    required: false
+    default: "true"
+  timeout:
+    description: "Request timeout in milliseconds"
+    required: false
+    default: "10000"
+
+outputs:
+  score:
+    description: "The agent-readiness score (0-100)"
+    value: ${{ steps.scan.outputs.score }}
+  grade:
+    description: "Letter grade (A/B/C/D/F)"
+    value: ${{ steps.scan.outputs.grade }}
+  passed:
+    description: "Whether the score met the threshold (true/false)"
+    value: ${{ steps.scan.outputs.passed }}
+  badge-url:
+    description: "Shields.io badge URL for the score"
+    value: ${{ steps.scan.outputs.badge_url }}
+  report-json:
+    description: "Full report as JSON string"
+    value: ${{ steps.scan.outputs.report_json }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - name: Install @agent-layer/score
+      shell: bash
+      run: npm install -g @agent-layer/score@latest 2>/dev/null || npx --yes @agent-layer/score --help > /dev/null
+
+    - name: Run agent-readiness scan
+      id: scan
+      shell: bash
+      env:
+        SCAN_URL: ${{ inputs.url }}
+        SCAN_THRESHOLD: ${{ inputs.threshold }}
+        SCAN_TIMEOUT: ${{ inputs.timeout }}
+        SCAN_JSON: ${{ inputs.json }}
+      run: |
+        set +e
+
+        # Run scan and capture JSON output
+        REPORT=$(npx @agent-layer/score "$SCAN_URL" --json --timeout "$SCAN_TIMEOUT" 2>/dev/null)
+        EXIT_CODE=$?
+
+        if [ $EXIT_CODE -ne 0 ] || [ -z "$REPORT" ]; then
+          echo "::error::Failed to scan $SCAN_URL"
+          echo "score=0" >> $GITHUB_OUTPUT
+          echo "grade=F" >> $GITHUB_OUTPUT
+          echo "passed=false" >> $GITHUB_OUTPUT
+          exit 1
+        fi
+
+        # Extract score
+        SCORE=$(echo "$REPORT" | jq -r '.score // 0')
+        echo "score=$SCORE" >> $GITHUB_OUTPUT
+        echo "report_json<<REPORT_EOF" >> $GITHUB_OUTPUT
+        echo "$REPORT" >> $GITHUB_OUTPUT
+        echo "REPORT_EOF" >> $GITHUB_OUTPUT
+
+        # Calculate grade
+        if [ "$SCORE" -ge 90 ]; then GRADE="A";
+        elif [ "$SCORE" -ge 80 ]; then GRADE="B";
+        elif [ "$SCORE" -ge 70 ]; then GRADE="C";
+        elif [ "$SCORE" -ge 50 ]; then GRADE="D";
+        else GRADE="F"; fi
+        echo "grade=$GRADE" >> $GITHUB_OUTPUT
+
+        # Badge URL
+        if [ "$SCORE" -ge 80 ]; then COLOR="brightgreen";
+        elif [ "$SCORE" -ge 50 ]; then COLOR="yellow";
+        else COLOR="red"; fi
+        echo "badge_url=https://img.shields.io/badge/Agent--Ready-${SCORE}%2F100-${COLOR}" >> $GITHUB_OUTPUT
+
+        # Check threshold
+        THRESHOLD="${SCAN_THRESHOLD:-0}"
+        if [ "$SCORE" -ge "$THRESHOLD" ]; then
+          echo "passed=true" >> $GITHUB_OUTPUT
+        else
+          echo "passed=false" >> $GITHUB_OUTPUT
+        fi
+
+        # Also show terminal output
+        if [ "$SCAN_JSON" = "true" ]; then
+          echo "$REPORT"
+        else
+          npx @agent-layer/score "$SCAN_URL" --timeout "$SCAN_TIMEOUT" 2>/dev/null || true
+        fi
+
+        # Write step summary
+        echo "## 🤖 Agent-Readiness Score: ${SCORE}/100 (${GRADE})" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**URL:** \`${SCAN_URL}\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Check | Score | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|-------|-------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "$REPORT" | jq -r '.checks[] | "| \(.name) | \(.score)/\(.maxScore) | \(if .severity == "pass" then "✅" elif .severity == "warn" then "⚠️" else "❌" end) |"' >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        FAILING=$(echo "$REPORT" | jq -r '.checks[] | select(.severity == "fail") | .suggestion // empty' | head -3)
+        if [ -n "$FAILING" ]; then
+          echo "### 🔧 Quick Wins" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "$FAILING" | while read -r line; do
+            echo "- $line" >> $GITHUB_STEP_SUMMARY
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        echo "![Agent-Ready](https://img.shields.io/badge/Agent--Ready-${SCORE}%2F100-${COLOR})" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "_Powered by [@agent-layer/score](https://github.com/lightlayer-dev/agent-layer-ts)_" >> $GITHUB_STEP_SUMMARY
+
+        # Enforce threshold
+        if [ "$SCORE" -lt "$THRESHOLD" ]; then
+          echo "::error::Agent-readiness score ${SCORE} is below threshold ${THRESHOLD}"
+          exit 1
+        fi
+
+    - name: Comment on PR
+      if: inputs.comment == 'true' && github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const score = parseInt('${{ steps.scan.outputs.score }}') || 0;
+          const grade = '${{ steps.scan.outputs.grade }}' || 'F';
+          const threshold = parseInt('${{ inputs.threshold }}') || 0;
+          const passed = score >= threshold;
+          const url = '${{ inputs.url }}';
+          const badgeUrl = '${{ steps.scan.outputs.badge_url }}';
+
+          let report;
+          try {
+            report = JSON.parse(`${{ steps.scan.outputs.report_json }}`);
+          } catch {
+            report = null;
+          }
+
+          let body = `## 🤖 Agent-Readiness: ${score}/100 (${grade})\n\n`;
+          body += `![Agent-Ready](${badgeUrl})\n\n`;
+          body += `**URL:** \`${url}\`\n`;
+
+          if (threshold > 0) {
+            body += `**Threshold:** ${threshold} — ${passed ? '✅ PASSED' : '❌ FAILED'}\n`;
+          }
+
+          if (report && report.checks) {
+            body += '\n| Check | Score | Status |\n';
+            body += '|-------|-------|--------|\n';
+            for (const c of report.checks) {
+              const icon = c.severity === 'pass' ? '✅' : c.severity === 'warn' ? '⚠️' : '❌';
+              body += `| ${c.name} | ${c.score}/${c.maxScore} | ${icon} |\n`;
+            }
+
+            const failing = report.checks.filter(c => c.severity === 'fail' && c.suggestion);
+            if (failing.length > 0) {
+              body += '\n### 🔧 Quick Wins\n\n';
+              for (const c of failing.slice(0, 3)) {
+                body += `- **${c.name}:** ${c.suggestion}\n`;
+              }
+            }
+          }
+
+          body += `\n---\n_Powered by [@agent-layer/score](https://github.com/lightlayer-dev/agent-layer-ts)_`;
+
+          const comments = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          });
+
+          const marker = '🤖 Agent-Readiness:';
+          const existing = comments.data.find(c =>
+            c.user.type === 'Bot' && c.body.includes(marker)
+          );
+
+          if (existing) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: existing.id,
+              body,
+            });
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+          }
