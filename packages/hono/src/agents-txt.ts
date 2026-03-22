@@ -1,30 +1,19 @@
 import type { Context, Next, MiddlewareHandler } from "hono";
 import { generateStandaloneAgentsTxt as generateAgentsTxt, isAgentAllowed } from "@agent-layer/core";
-import type { StandaloneAgentsTxtConfig as AgentsTxtConfig } from "@agent-layer/core";
+import type { AgentsTxtMiddlewareConfig } from "@agent-layer/core";
 
-export interface AgentsTxtMiddlewareConfig extends AgentsTxtConfig {
-  enforce?: boolean;
-}
+export type { AgentsTxtMiddlewareConfig };
 
-/**
- * Create Hono handlers for agents.txt — the "robots.txt for AI agents".
- */
 export function agentsTxtRoutes(config: AgentsTxtMiddlewareConfig) {
   const content = generateAgentsTxt(config);
 
   return {
-    /**
-     * GET /agents.txt handler.
-     */
     agentsTxt(c: Context): Response {
       c.header("Content-Type", "text/plain; charset=utf-8");
       c.header("Cache-Control", "public, max-age=3600");
       return c.text(content);
     },
 
-    /**
-     * Enforcement middleware.
-     */
     enforce: ((c: Context, next: Next) => {
       if (!config.enforce) {
         return next();

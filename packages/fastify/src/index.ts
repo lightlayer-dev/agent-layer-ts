@@ -27,12 +27,13 @@ export { a2aRoutes } from "./a2a.js";
 export { agentIdentity } from "./agent-identity.js";
 export { agentsTxtRoutes } from "./agents-txt.js";
 export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
+export { mcpServer } from "./mcp.js";
+export type { McpServerConfig } from "./mcp.js";
+export { unifiedDiscovery } from "./unified-discovery.js";
 
 /**
  * One-liner Fastify plugin that composes all agent-layer functionality.
  * Each feature can be disabled by setting it to `false` in the config.
- *
- * Usage: `fastify.register(agentLayer, { llmsTxt: { title: "My API" }, ... })`
  */
 export function agentLayer(config: AgentLayerConfig) {
   return fp(

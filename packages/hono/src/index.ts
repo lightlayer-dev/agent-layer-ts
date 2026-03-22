@@ -26,12 +26,13 @@ export { a2aRoutes } from "./a2a.js";
 export { agentIdentity } from "./agent-identity.js";
 export { agentsTxtRoutes } from "./agents-txt.js";
 export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
+export { mcpServer } from "./mcp.js";
+export type { McpServerConfig } from "./mcp.js";
+export { unifiedDiscovery } from "./unified-discovery.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Hono app.
  * Each feature can be disabled by setting it to `false` in the config.
- *
- * Use with `app.route("/", agentLayer({ ... }))` to mount all middleware.
  */
 export function agentLayer(config: AgentLayerConfig): Hono {
   const app = new Hono();
