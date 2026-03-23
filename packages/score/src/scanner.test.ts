@@ -16,7 +16,7 @@ describe("scan", () => {
     expect(report.url).toBe("https://example.com");
     expect(report.score).toBeGreaterThanOrEqual(0);
     expect(report.score).toBeLessThanOrEqual(100);
-    expect(report.checks).toHaveLength(11);
+    expect(report.checks).toHaveLength(13);
     expect(report.durationMs).toBeGreaterThanOrEqual(0);
     expect(report.timestamp).toBeDefined();
   });
