@@ -137,4 +137,35 @@ describe("matchRoute", () => {
   it("is case-insensitive on method", () => {
     expect(matchRoute("get", "/api/weather", routes)).toBeDefined();
   });
+
+  describe("wildcard patterns", () => {
+    const wildRoutes = {
+      "GET /api/weather": { payTo: "0x1", price: "$0.01" as const, network: "eip155:8453" as const },
+      "GET /api/*": { payTo: "0x3", price: "$0.10" as const, network: "eip155:8453" as const },
+      "GET /data/v2/*": { payTo: "0x4", price: "$0.02" as const, network: "eip155:8453" as const },
+    };
+
+    it("exact match takes priority over wildcard", () => {
+      const result = matchRoute("GET", "/api/weather", wildRoutes);
+      expect(result?.payTo).toBe("0x1");
+    });
+
+    it("wildcard matches paths under the prefix", () => {
+      expect(matchRoute("GET", "/api/users", wildRoutes)?.payTo).toBe("0x3");
+      expect(matchRoute("GET", "/api/users/123", wildRoutes)?.payTo).toBe("0x3");
+    });
+
+    it("wildcard does not match different methods", () => {
+      expect(matchRoute("POST", "/api/users", wildRoutes)).toBeUndefined();
+    });
+
+    it("returns undefined when no wildcard matches", () => {
+      expect(matchRoute("GET", "/other/path", wildRoutes)).toBeUndefined();
+    });
+
+    it("picks the most specific (longest prefix) wildcard", () => {
+      const result = matchRoute("GET", "/data/v2/records", wildRoutes);
+      expect(result?.payTo).toBe("0x4");
+    });
+  });
 });

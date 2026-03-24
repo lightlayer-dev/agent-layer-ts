@@ -190,6 +190,13 @@ export type {
   X402FlowResult,
 } from "./x402-handler.js";
 
+export {
+  isPaymentRequired,
+  extractPaymentRequirements,
+  wrapFetchWithPayment,
+} from "./x402-client.js";
+export type { WalletSigner } from "./x402-client.js";
+
 // ── Shared middleware config ────────────────────────────────────────────
 export type { AgentsTxtMiddlewareConfig } from "./agents-txt-middleware.js";
 
