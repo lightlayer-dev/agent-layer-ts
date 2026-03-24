@@ -46,7 +46,7 @@ export function wrapFetchWithPayment(
   fetchFn: typeof fetch,
   walletSigner: WalletSigner,
 ): typeof fetch {
-  return async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+  return async (input: string | URL | Request, init?: RequestInit): Promise<Response> => {
     const response = await fetchFn(input, init);
 
     if (!isPaymentRequired(response)) {
