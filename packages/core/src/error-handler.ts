@@ -12,7 +12,7 @@ import { AgentError, formatError } from "./errors.js";
  * Determine whether the client prefers JSON (i.e., is an agent) based on
  * raw Accept and User-Agent header values.
  */
-export function prefersJson(accept?: string, userAgent?: string): boolean {
+function prefersJson(accept?: string, userAgent?: string): boolean {
   const a = accept ?? "";
   if (a.includes("application/json")) return true;
   if (a.includes("text/html")) return false;
@@ -26,7 +26,7 @@ export function prefersJson(accept?: string, userAgent?: string): boolean {
 /**
  * Render an error envelope as a simple HTML page.
  */
-export function renderHtmlError(envelope: AgentErrorEnvelope): string {
+function renderHtmlError(envelope: AgentErrorEnvelope): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="utf-8"><title>Error ${envelope.status}</title></head>

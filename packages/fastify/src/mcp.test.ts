@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import Fastify from "fastify";
 import { mcpServer } from "./mcp.js";
 import type { McpServerConfig } from "./mcp.js";
-import { testRoutes, testMcpConfig } from "@agent-layer/core";
+import { testRoutes, testMcpConfig } from "@agent-layer/core/testing";
 
 function createApp(config: McpServerConfig = testMcpConfig) {
   const app = Fastify();

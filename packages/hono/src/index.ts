@@ -31,6 +31,8 @@ export type { McpServerConfig } from "./mcp.js";
 export { unifiedDiscovery } from "./unified-discovery.js";
 export { agUiStream } from "./ag-ui.js";
 export type { AgUiStreamHandler, AgUiMiddlewareOptions } from "./ag-ui.js";
+export { oauth2Auth, getOAuth2Token } from "./oauth2.js";
+export type { HonoOAuth2Handlers } from "./oauth2.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Hono app.

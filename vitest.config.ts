@@ -5,6 +5,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@agent-layer/core/x402": path.resolve(__dirname, "packages/core/src/x402.ts"),
+      "@agent-layer/core/testing": path.resolve(__dirname, "packages/core/src/testing.ts"),
       "@agent-layer/core": path.resolve(__dirname, "packages/core/src/index.ts"),
       "@agent-layer/koa": path.resolve(__dirname, "packages/koa/src/index.ts"),
       "@agent-layer/hono": path.resolve(__dirname, "packages/hono/src/index.ts"),

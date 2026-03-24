@@ -33,6 +33,8 @@ export { agentsTxtRoutes } from "./agents-txt.js";
 export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
 export { agUiStream } from "./ag-ui.js";
 export type { AgUiStreamHandler, AgUiMiddlewareOptions } from "./ag-ui.js";
+export { oauth2Auth } from "./oauth2.js";
+export type { OAuth2Handlers } from "./oauth2.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Express router.

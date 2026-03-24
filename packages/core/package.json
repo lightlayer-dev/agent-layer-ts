@@ -11,6 +11,10 @@
     "./x402": {
       "import": "./dist/x402.js",
       "require": "./dist/x402.cjs"
+    },
+    "./testing": {
+      "import": "./dist/testing.js",
+      "require": "./dist/testing.cjs"
     }
   },
   "main": "./dist/index.cjs",

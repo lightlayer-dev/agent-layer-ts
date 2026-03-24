@@ -30,6 +30,8 @@ export { mcpServer } from "./mcp.js";
 export type { McpServerConfig } from "./mcp.js";
 export { agUiStream } from "./ag-ui.js";
 export type { AgUiStreamHandler, AgUiMiddlewareOptions } from "./ag-ui.js";
+export { oauth2Auth, getOAuth2Token } from "./oauth2.js";
+export type { KoaOAuth2Handlers } from "./oauth2.js";
 export { agentsTxtRoutes } from "./agents-txt.js";
 export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
 

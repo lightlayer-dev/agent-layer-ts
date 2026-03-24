@@ -96,18 +96,12 @@ export type {
   UnifiedSkill,
   UnifiedDiscoveryConfig,
 } from "./unified-discovery.js";
-// Backwards compat: re-export UnifiedAgentsTxtConfig as AgentsTxtConfig for existing consumers
-export type { UnifiedAgentsTxtConfig as AgentsTxtConfig } from "./unified-discovery.js";
 export {
   generateAgentsTxt as generateStandaloneAgentsTxt,
   parseAgentsTxt,
   isAgentAllowed,
 } from "./agents-txt.js";
-export type {
-  AgentsTxtConfig as StandaloneAgentsTxtConfig,
-  AgentsTxtRule as StandaloneAgentsTxtRule,
-  AgentsTxtRateLimit,
-} from "./agents-txt.js";
+export type { AgentsTxtRateLimit } from "./agents-txt.js";
 export {
   HttpFacilitatorClient,
   resolvePrice,
@@ -137,8 +131,6 @@ export type {
 
 // ── Core handler functions (framework-agnostic) ─────────────────────────
 export {
-  prefersJson,
-  renderHtmlError,
   buildErrorEnvelope,
   buildErrorResponse,
   buildNotFoundResponse,
@@ -151,6 +143,36 @@ export {
   checkRequireAuth,
 } from "./auth-handler.js";
 export type { RequireAuthResult } from "./auth-handler.js";
+
+export {
+  generateCodeVerifier,
+  computeCodeChallenge,
+  generatePKCE,
+  buildAuthorizationUrl,
+  exchangeCode,
+  refreshAccessToken,
+  validateAccessToken,
+  extractBearerToken,
+  buildOAuth2Metadata,
+  OAuth2TokenError,
+} from "./oauth2.js";
+export type {
+  OAuth2Config,
+  TokenResponse,
+  PKCEPair,
+  OAuth2Error,
+  DecodedAccessToken,
+  TokenValidationResult,
+  OAuth2HttpClient,
+} from "./oauth2.js";
+
+export { handleOAuth2 } from "./oauth2-handler.js";
+export type {
+  OAuth2MiddlewareConfig,
+  OAuth2ValidationSuccess,
+  OAuth2ValidationFailure,
+  OAuth2ValidationResult,
+} from "./oauth2-handler.js";
 
 export {
   extractAndVerifyToken,
@@ -202,12 +224,3 @@ export type {
   CustomEvent,
 } from "./ag-ui.js";
 
-// ── Test utilities ──────────────────────────────────────────────────────
-export {
-  makeJwt,
-  validJwtPayload,
-  baseIdentityConfig,
-  testRoutes,
-  testMcpConfig,
-  makeCustomVerifier,
-} from "./test-utils.js";

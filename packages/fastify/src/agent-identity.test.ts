@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import Fastify from "fastify";
 import { agentIdentity } from "./agent-identity.js";
-import { makeJwt, validJwtPayload, baseIdentityConfig } from "@agent-layer/core";
+import { makeJwt, validJwtPayload, baseIdentityConfig } from "@agent-layer/core/testing";
 import type { AgentIdentityConfig } from "@agent-layer/core";
 
 const now = Math.floor(Date.now() / 1000);

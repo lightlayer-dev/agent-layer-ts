@@ -29,6 +29,7 @@ export { agentsTxtRoutes } from "./agents-txt.js";
 export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
 export { agUiStream } from "./ag-ui.js";
 export type { AgUiStreamHandler, AgUiMiddlewareOptions } from "./ag-ui.js";
+export { oauth2Auth } from "./oauth2.js";
 export { mcpServer } from "./mcp.js";
 export type { McpServerConfig } from "./mcp.js";
 export { unifiedDiscovery } from "./unified-discovery.js";
