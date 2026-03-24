@@ -214,12 +214,39 @@ export function decodePaymentPayload(header: string): PaymentPayload {
   }
 }
 
-/** Match an incoming request to a route config key ("METHOD /path"). */
+/** Match an incoming request to a route config key ("METHOD /path").
+ *
+ * Supports exact matches ("GET /api/weather") and wildcard patterns
+ * ("GET /api/*" matches any path starting with /api/).
+ * Exact matches take priority over wildcard matches.
+ */
 export function matchRoute(
   method: string,
   path: string,
   routes: Record<string, X402RouteConfig>,
 ): X402RouteConfig | undefined {
   const key = `${method.toUpperCase()} ${path}`;
-  return routes[key];
+
+  // Exact match first (highest priority)
+  if (routes[key]) return routes[key];
+
+  // Wildcard matching — find the most specific (longest prefix) match
+  const upperMethod = method.toUpperCase();
+  let bestMatch: X402RouteConfig | undefined;
+  let bestLen = -1;
+
+  for (const pattern of Object.keys(routes)) {
+    if (!pattern.endsWith("/*")) continue;
+    const [patternMethod, patternPath] = pattern.split(" ", 2);
+    if (patternMethod !== upperMethod) continue;
+
+    // "/api/*" → prefix is "/api/"
+    const prefix = patternPath.slice(0, -1); // remove trailing "*"
+    if (path.startsWith(prefix) && prefix.length > bestLen) {
+      bestLen = prefix.length;
+      bestMatch = routes[pattern];
+    }
+  }
+
+  return bestMatch;
 }
