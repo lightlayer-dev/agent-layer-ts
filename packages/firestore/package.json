@@ -12,7 +12,10 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "prepublishOnly": "pnpm build"
@@ -59,5 +62,8 @@
     "firebase-admin": {
       "optional": true
     }
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

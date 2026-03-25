@@ -12,7 +12,10 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "prepublishOnly": "pnpm build"
@@ -52,5 +55,8 @@
   },
   "peerDependencies": {
     "@strapi/strapi": "^4.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
