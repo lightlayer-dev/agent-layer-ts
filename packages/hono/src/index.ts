@@ -10,6 +10,8 @@ import { agentAnalytics } from "./analytics.js";
 import { apiKeyAuth } from "./api-keys.js";
 import { a2aRoutes } from "./a2a.js";
 import { agentsTxtRoutes } from "./agents-txt.js";
+import { robotsTxtRoutes } from "./robots-txt.js";
+import { securityHeaders } from "./security-headers.js";
 
 export { agentErrors, notFoundHandler } from "./agent-errors.js";
 export { rateLimits } from "./rate-limits.js";
@@ -33,6 +35,10 @@ export { agUiStream } from "./ag-ui.js";
 export type { AgUiStreamHandler, AgUiMiddlewareOptions } from "./ag-ui.js";
 export { oauth2Auth, getOAuth2Token } from "./oauth2.js";
 export type { HonoOAuth2Handlers } from "./oauth2.js";
+export { robotsTxtRoutes } from "./robots-txt.js";
+export type { RobotsTxtConfig } from "./robots-txt.js";
+export { securityHeaders } from "./security-headers.js";
+export type { SecurityHeadersConfig } from "./security-headers.js";
 
 /**
  * One-liner that composes all agent-layer middleware onto a single Hono app.
@@ -44,6 +50,11 @@ export function agentLayer(config: AgentLayerConfig): Hono {
   // Error handling
   if (config.errors !== false) {
     app.onError(agentErrors());
+  }
+
+  // Security headers (earliest — on every response)
+  if (config.securityHeaders !== false && config.securityHeaders) {
+    app.use("*", securityHeaders(config.securityHeaders));
   }
 
   // Analytics (earliest — captures all agent traffic)
@@ -93,6 +104,12 @@ export function agentLayer(config: AgentLayerConfig): Hono {
     if (config.agentsTxt.enforce) {
       app.use("*", handlers.enforce);
     }
+  }
+
+  // robots.txt with AI agent awareness
+  if (config.robotsTxt !== false && config.robotsTxt) {
+    const handlers = robotsTxtRoutes(config.robotsTxt);
+    app.get("/robots.txt", (c) => handlers.robotsTxt(c));
   }
 
   // Auth discovery

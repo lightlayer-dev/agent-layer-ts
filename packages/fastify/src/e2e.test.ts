@@ -40,6 +40,12 @@ async function createFullApp() {
       agentsTxt: {
         rules: [{ agent: "*", allow: ["/api/"], deny: ["/admin/"] }],
       },
+      robotsTxt: {
+        aiAllow: ["/api/"],
+        aiDisallow: ["/admin/"],
+        sitemaps: ["https://test.example.com/sitemap.xml"],
+      },
+      securityHeaders: {},
       errors: true,
     }),
   );
@@ -76,6 +82,15 @@ describe("Fastify E2E: full agentLayer stack", () => {
       const body = res.json();
       expect(body.name).toBe("Test Agent");
       expect(body.skills).toHaveLength(1);
+    });
+
+    it("serves /robots.txt with AI agent rules", async () => {
+      const app = await createFullApp();
+      const res = await app.inject({ method: "GET", url: "/robots.txt" });
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toContain("User-agent: GPTBot");
+      expect(res.body).toContain("User-agent: ClaudeBot");
+      expect(res.body).toContain("Allow: /api/");
     });
 
     it("serves /agents.txt", async () => {
@@ -133,6 +148,14 @@ describe("Fastify E2E: full agentLayer stack", () => {
       const res = await app.inject({ method: "GET", url: "/.well-known/ai" });
       expect(res.statusCode).toBe(200);
       expect(res.headers["x-ratelimit-limit"]).toBeDefined();
+    });
+
+    it("security headers on all responses", async () => {
+      const app = await createFullApp();
+      const res = await app.inject({ method: "GET", url: "/.well-known/ai" });
+      expect(res.headers["strict-transport-security"]).toContain("max-age");
+      expect(res.headers["x-content-type-options"]).toBe("nosniff");
+      expect(res.headers["referrer-policy"]).toBeDefined();
     });
   });
 });

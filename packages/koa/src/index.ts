@@ -10,6 +10,8 @@ import { agentAnalytics } from "./analytics.js";
 import { apiKeyAuth } from "./api-keys.js";
 import { a2aRoutes } from "./a2a.js";
 import { agentsTxtRoutes } from "./agents-txt.js";
+import { robotsTxtRoutes } from "./robots-txt.js";
+import { securityHeaders } from "./security-headers.js";
 
 export { agentErrors, notFoundHandler } from "./agent-errors.js";
 export { rateLimits } from "./rate-limits.js";
@@ -32,6 +34,10 @@ export { agUiStream } from "./ag-ui.js";
 export type { AgUiStreamHandler, AgUiMiddlewareOptions } from "./ag-ui.js";
 export { oauth2Auth, getOAuth2Token } from "./oauth2.js";
 export type { KoaOAuth2Handlers } from "./oauth2.js";
+export { robotsTxtRoutes } from "./robots-txt.js";
+export type { RobotsTxtConfig } from "./robots-txt.js";
+export { securityHeaders } from "./security-headers.js";
+export type { SecurityHeadersConfig } from "./security-headers.js";
 export { agentsTxtRoutes } from "./agents-txt.js";
 export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
 
@@ -41,6 +47,11 @@ export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
  */
 export function agentLayer(config: AgentLayerConfig): Router {
   const router = new Router();
+
+  // Security headers (earliest — on every response)
+  if (config.securityHeaders !== false && config.securityHeaders) {
+    router.use(securityHeaders(config.securityHeaders));
+  }
 
   // Analytics (earliest — captures all agent traffic)
   if (config.analytics !== false && config.analytics) {
@@ -89,6 +100,12 @@ export function agentLayer(config: AgentLayerConfig): Router {
     if (config.agentsTxt.enforce) {
       router.use(handlers.enforce);
     }
+  }
+
+  // robots.txt with AI agent awareness
+  if (config.robotsTxt !== false && config.robotsTxt) {
+    const rtHandlers = robotsTxtRoutes(config.robotsTxt);
+    router.get("/robots.txt", rtHandlers.robotsTxt);
   }
 
   // Auth discovery

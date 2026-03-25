@@ -38,6 +38,12 @@ function createFullApp() {
     agentsTxt: {
       rules: [{ agent: "*", allow: ["/api/"], deny: ["/admin/"] }],
     },
+    robotsTxt: {
+      aiAllow: ["/api/"],
+      aiDisallow: ["/admin/"],
+      sitemaps: ["https://test.example.com/sitemap.xml"],
+    },
+    securityHeaders: {},
     errors: true,
   });
 
@@ -81,6 +87,15 @@ describe("Hono E2E: full agentLayer stack", () => {
       const body = (await res.json()) as any;
       expect(body.name).toBe("Test Agent");
       expect(body.skills).toHaveLength(1);
+    });
+
+    it("serves /robots.txt with AI agent rules", async () => {
+      const res = await app.request("/robots.txt");
+      expect(res.status).toBe(200);
+      const text = await res.text();
+      expect(text).toContain("User-agent: GPTBot");
+      expect(text).toContain("User-agent: ClaudeBot");
+      expect(text).toContain("Allow: /api/");
     });
 
     it("serves /agents.txt", async () => {
@@ -131,6 +146,13 @@ describe("Hono E2E: full agentLayer stack", () => {
       const res = await app.request("/.well-known/ai");
       expect(res.status).toBe(200);
       expect(res.headers.get("x-ratelimit-limit")).toBeDefined();
+    });
+
+    it("security headers on all responses", async () => {
+      const res = await app.request("/.well-known/ai");
+      expect(res.headers.get("strict-transport-security")).toContain("max-age");
+      expect(res.headers.get("x-content-type-options")).toBe("nosniff");
+      expect(res.headers.get("referrer-policy")).toBeDefined();
     });
   });
 });
