@@ -350,14 +350,14 @@ The `@agent-layer/score` package is a Lighthouse-style CLI that scores your API'
 npx @agent-layer/score https://myapp.com
 ```
 
-Our automated tests spin up real HTTP servers and verify the score difference — a bare server scores **16/100** while the same server with `agentLayer()` middleware scores **74/100** (a 58-point improvement). See `packages/score/src/scanner-e2e.test.ts` for the full test.
+Our automated tests spin up real HTTP servers and verify the score difference — a bare server scores **16/100** while the same server with `agentLayer()` middleware scores **100/100**. See `packages/score/src/scanner-e2e.test.ts` for the full test.
 
 ## Development
 
 ```bash
 pnpm install
 pnpm build
-pnpm test    # 786 tests across 94 test files
+pnpm test    # 814 tests across 98 test files
 ```
 
 ## License

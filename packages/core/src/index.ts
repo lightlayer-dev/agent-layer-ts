@@ -231,3 +231,16 @@ export type {
   CustomEvent,
 } from "./ag-ui.js";
 
+
+// ── Robots.txt ────────────────────────────────────────────────────────
+export {
+  generateRobotsTxt,
+  AI_AGENTS,
+} from "./robots-txt.js";
+export type { RobotsTxtConfig, RobotsTxtRule } from "./robots-txt.js";
+
+// ── Security Headers ──────────────────────────────────────────────────
+export {
+  generateSecurityHeaders,
+} from "./security-headers.js";
+export type { SecurityHeadersConfig, SecurityHeaders } from "./security-headers.js";

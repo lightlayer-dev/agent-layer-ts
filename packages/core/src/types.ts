@@ -170,4 +170,6 @@ export interface AgentLayerConfig {
   agentsTxt?: false | (import("./agents-txt.js").AgentsTxtConfig & { enforce?: boolean });
   unifiedDiscovery?: false | import("./unified-discovery.js").UnifiedDiscoveryConfig;
   oauth2?: false | import("./oauth2.js").OAuth2Config;
+  robotsTxt?: false | import("./robots-txt.js").RobotsTxtConfig;
+  securityHeaders?: false | import("./security-headers.js").SecurityHeadersConfig;
 }
