@@ -11,6 +11,8 @@ import { agentAnalytics } from "./analytics.js";
 import { apiKeyAuth } from "./api-keys.js";
 import { a2aRoutes } from "./a2a.js";
 import { agentsTxtRoutes } from "./agents-txt.js";
+import { robotsTxtRoutes } from "./robots-txt.js";
+import { securityHeaders } from "./security-headers.js";
 
 export { agentErrors } from "./agent-errors.js";
 export { rateLimits } from "./rate-limits.js";
@@ -30,6 +32,10 @@ export type { AgentsTxtMiddlewareConfig } from "./agents-txt.js";
 export { agUiStream } from "./ag-ui.js";
 export type { AgUiStreamHandler, AgUiMiddlewareOptions } from "./ag-ui.js";
 export { oauth2Auth } from "./oauth2.js";
+export { robotsTxtRoutes } from "./robots-txt.js";
+export type { RobotsTxtConfig } from "./robots-txt.js";
+export { securityHeaders } from "./security-headers.js";
+export type { SecurityHeadersConfig } from "./security-headers.js";
 export { mcpServer } from "./mcp.js";
 export type { McpServerConfig } from "./mcp.js";
 export { unifiedDiscovery } from "./unified-discovery.js";
@@ -44,6 +50,11 @@ export function agentLayer(config: AgentLayerConfig) {
       // Error handling
       if (config.errors !== false) {
         await fastify.register(agentErrors);
+      }
+
+      // Security headers (earliest — on every response)
+      if (config.securityHeaders !== false && config.securityHeaders) {
+        await fastify.register(securityHeaders(config.securityHeaders));
       }
 
       // Analytics (earliest — captures all agent traffic)
@@ -84,6 +95,11 @@ export function agentLayer(config: AgentLayerConfig) {
       // agents.txt (robots.txt for AI agents)
       if (config.agentsTxt !== false && config.agentsTxt) {
         await fastify.register(agentsTxtRoutes(config.agentsTxt));
+      }
+
+      // robots.txt with AI agent awareness
+      if (config.robotsTxt !== false && config.robotsTxt) {
+        await fastify.register(robotsTxtRoutes(config.robotsTxt));
       }
 
       // Auth discovery

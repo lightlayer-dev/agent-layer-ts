@@ -46,6 +46,13 @@ function createFullApp() {
     agentsTxt: {
       rules: [{ agent: "*", allow: ["/api/"], deny: ["/admin/"] }],
     },
+    robotsTxt: {
+      aiAllow: ["/api/"],
+      aiDisallow: ["/admin/"],
+      sitemaps: ["https://test.example.com/sitemap.xml"],
+    },
+    securityHeaders: {
+    },
     errors: true,
   });
 
@@ -81,6 +88,14 @@ describe("Koa E2E: full agentLayer stack", () => {
       expect(res.status).toBe(200);
       expect(res.body.name).toBe("Test Agent");
       expect(res.body.skills).toHaveLength(1);
+    });
+
+    it("serves /robots.txt with AI agent rules", async () => {
+      const res = await request(server).get("/robots.txt");
+      expect(res.status).toBe(200);
+      expect(res.text).toContain("User-agent: GPTBot");
+      expect(res.text).toContain("User-agent: ClaudeBot");
+      expect(res.text).toContain("Allow: /api/");
     });
 
     it("serves /agents.txt", async () => {
