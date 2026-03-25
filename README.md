@@ -342,26 +342,22 @@ import { agentMeta } from "@agent-layer/express";
 app.use(agentMeta({ prefix: "app" }));
 ```
 
-## Validate with agent-bench
+## Validate with `@agent-layer/score`
+
+The `@agent-layer/score` package is a Lighthouse-style CLI that scores your API's agent-readiness across 13 checks: structured errors, discovery endpoints, llms.txt, rate limit headers, OpenAPI, CORS, security headers, agents.txt, and more.
 
 ```bash
-# Before agent-layer
-$ agent-bench analyze https://myapp.com
-Overall Score: 35%
-
-# After adding agent-layer
-$ agent-bench analyze https://myapp.com
-Overall Score: 82%
+npx @agent-layer/score https://myapp.com
 ```
 
-[agent-bench](https://github.com/LightLayer-dev/agent-bench) is our open-source benchmark that scores websites on agent-readiness.
+Our automated tests spin up real HTTP servers and verify the score difference — a bare server scores **16/100** while the same server with `agentLayer()` middleware scores **74/100** (a 58-point improvement). See `packages/score/src/scanner-e2e.test.ts` for the full test.
 
 ## Development
 
 ```bash
 pnpm install
 pnpm build
-pnpm test    # 613 tests
+pnpm test    # 786 tests across 94 test files
 ```
 
 ## License
