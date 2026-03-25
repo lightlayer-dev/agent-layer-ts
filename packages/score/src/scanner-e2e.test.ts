@@ -35,37 +35,64 @@ function close(server: Server): Promise<void> {
 function createAgentReadyServer(): Server {
   return createServer((req: IncomingMessage, res: ServerResponse) => {
     const url = req.url ?? "/";
+    const method = req.method ?? "GET";
 
-    // Rate limit headers on ALL responses
+    // ── Global headers (on ALL responses) ───────────────────────────
+
+    // Rate limit headers
     res.setHeader("X-RateLimit-Limit", "100");
     res.setHeader("X-RateLimit-Remaining", "99");
     res.setHeader("X-RateLimit-Reset", String(Math.floor(Date.now() / 1000) + 60));
-    // CORS headers
+
+    // x402 payment headers on all responses (advertise payment support)
+    res.setHeader("X-Payment-Address", "0x1234567890abcdef1234567890abcdef12345678");
+    res.setHeader("X-Payment-Network", "base");
+    res.setHeader("X-Payment-Currency", "USDC");
+
+    // CORS headers (full set for 10/10)
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    // Security headers
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Agent-Key");
+    res.setHeader("Access-Control-Max-Age", "86400");
+
+    // Security headers (full set for 10/10)
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("X-Frame-Options", "DENY");
-    res.setHeader("Strict-Transport-Security", "max-age=31536000");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader("Content-Security-Policy", "default-src 'self'");
+
+    // Handle CORS preflight
+    if (method === "OPTIONS") {
+      res.statusCode = 204;
+      res.end();
+      return;
+    }
+
+    // Helper for JSON responses with charset
+    const jsonResponse = (data: unknown, status = 200) => {
+      res.statusCode = status;
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
+      res.end(JSON.stringify(data));
+    };
+
+    // ── Routes ──────────────────────────────────────────────────────
 
     if (url === "/.well-known/ai") {
-      res.setHeader("Content-Type", "application/json");
-      res.end(JSON.stringify({
+      jsonResponse({
         name: "Test API",
         description: "An agent-ready API powered by agent-layer",
         version: "1.0.0",
         endpoints: ["/api/users", "/api/health"],
-      }));
+      });
     } else if (url === "/.well-known/agent.json") {
-      res.setHeader("Content-Type", "application/json");
-      res.end(JSON.stringify({
+      jsonResponse({
         name: "Test Agent",
         description: "E2E test agent",
         url: "http://localhost",
         capabilities: { streaming: false },
         skills: [{ id: "echo", name: "Echo", description: "Echoes input" }],
-      }));
+      });
     } else if (url === "/llms.txt") {
       res.setHeader("Content-Type", "text/plain; charset=utf-8");
       res.end(
@@ -82,36 +109,83 @@ function createAgentReadyServer(): Server {
         "## Error Format\nAll errors follow the structured error envelope format.\n",
       );
     } else if (url === "/agents.txt") {
+      // Full agents.txt with auth + rate-limit for 10/10
       res.setHeader("Content-Type", "text/plain; charset=utf-8");
-      res.end("User-agent: *\nAllow: /api/\nDisallow: /admin/\n");
+      res.end(
+        "# agents.txt — Test API\n\n" +
+        "User-agent: *\n" +
+        "Allow: /api/\n" +
+        "Disallow: /admin/\n" +
+        "Auth: bearer\n" +
+        "Rate-limit: 100/minute\n",
+      );
     } else if (url === "/robots.txt") {
+      // robots.txt with AI-specific agent rules for 10/10
       res.setHeader("Content-Type", "text/plain; charset=utf-8");
-      res.end("User-agent: *\nAllow: /\n");
+      res.end(
+        "User-agent: *\nAllow: /\n\n" +
+        "User-agent: GPTBot\nAllow: /api/\nDisallow: /admin/\n\n" +
+        "User-agent: ClaudeBot\nAllow: /api/\nDisallow: /admin/\n\n" +
+        "User-agent: Google-Extended\nAllow: /api/\nDisallow: /admin/\n\n" +
+        "User-agent: Anthropic\nAllow: /api/\n\n" +
+        "Sitemap: http://localhost/sitemap.xml\n",
+      );
     } else if (url === "/openapi.json") {
-      res.setHeader("Content-Type", "application/json");
-      res.end(JSON.stringify({
+      jsonResponse({
         openapi: "3.0.0",
-        info: { title: "Test API", version: "1.0.0" },
+        info: { title: "Test API", version: "1.0.0", description: "A fully agent-ready API" },
         paths: {
-          "/api/users": { get: { summary: "List users" } },
-          "/api/health": { get: { summary: "Health check" } },
+          "/api/users": {
+            get: { summary: "List users", description: "Returns all users in the system" },
+          },
+          "/api/health": {
+            get: { summary: "Health check", description: "Returns service health status" },
+          },
         },
-      }));
-    } else if (url === "/api/health") {
-      res.setHeader("Content-Type", "application/json");
-      res.end(JSON.stringify({ status: "ok" }));
+      });
     } else if (url === "/.well-known/x402") {
-      // No x402 support — that's fine, it's optional
-      res.statusCode = 404;
-      res.setHeader("Content-Type", "application/json");
+      // x402 payment discovery endpoint
+      jsonResponse({
+        version: "1.0.0",
+        accepts: ["ETH", "USDC"],
+        paymentAddress: "0x1234567890abcdef1234567890abcdef12345678",
+        network: "base",
+        description: "Pay-per-call API access for AI agents",
+      });
+    } else if (url === "/api/__x402_probe__") {
+      // Proper 402 response for payment-required routes
+      res.statusCode = 402;
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
+      res.setHeader("X-Payment-Address", "0x1234567890abcdef1234567890abcdef12345678");
+      res.setHeader("X-Payment-Network", "base");
+      res.setHeader("X-Payment-Amount", "0.001");
+      res.setHeader("X-Payment-Currency", "USDC");
       res.end(JSON.stringify({
-        error: { type: "not_found_error", code: "not_found", message: "Not found", status: 404, is_retriable: false },
+        error: "payment_required",
+        message: "This endpoint requires payment",
+        paymentAddress: "0x1234567890abcdef1234567890abcdef12345678",
+        amount: "0.001",
+        currency: "USDC",
+        network: "base",
       }));
+    } else if (url === "/ag-ui" || url === "/api/ag-ui" || url === "/.well-known/ag-ui") {
+      // AG-UI streaming endpoint (responds to GET with info, POST for actual streaming)
+      if (method === "POST") {
+        res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+        res.end("event: message\ndata: {\"type\":\"connected\"}\n\n");
+      } else {
+        jsonResponse({
+          protocol: "ag-ui",
+          version: "1.0.0",
+          description: "AG-UI streaming endpoint for real-time agent communication",
+          supportedEvents: ["message", "state", "tool_call"],
+        });
+      }
+    } else if (url === "/api/health") {
+      jsonResponse({ status: "ok" });
     } else {
       // Structured 404 error (agent-friendly)
-      res.statusCode = 404;
-      res.setHeader("Content-Type", "application/json");
-      res.end(JSON.stringify({
+      jsonResponse({
         error: {
           type: "not_found_error",
           code: "not_found",
@@ -119,7 +193,7 @@ function createAgentReadyServer(): Server {
           status: 404,
           is_retriable: false,
         },
-      }));
+      }, 404);
     }
   });
 }
@@ -172,7 +246,7 @@ describe("Scanner E2E: agent-ready server vs bare server", () => {
       console.log(`  ${check.severity === "pass" ? "✅" : check.severity === "warn" ? "⚠️" : "❌"} ${check.name}: ${check.score}/${check.maxScore} — ${check.message}`);
     }
 
-    expect(report.score).toBeGreaterThanOrEqual(60);
+    expect(report.score).toBeGreaterThanOrEqual(95);
     expect(report.checks.length).toBeGreaterThan(0);
 
     // Verify specific checks pass
@@ -225,6 +299,6 @@ describe("Scanner E2E: agent-ready server vs bare server", () => {
 
     const improvement = agentReport.score - bareReport.score;
     console.log(`\nScore improvement: ${bareReport.score} → ${agentReport.score} (+${improvement} points)`);
-    expect(improvement).toBeGreaterThanOrEqual(50);
+    expect(improvement).toBeGreaterThanOrEqual(70);
   });
 });
