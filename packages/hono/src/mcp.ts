@@ -126,11 +126,14 @@ export function mcpServer(config: McpServerConfig) {
         const sessionId =
           c.req.header("mcp-session-id") || crypto.randomUUID();
 
-        c.header("Content-Type", "text/event-stream");
-        c.header("Cache-Control", "no-cache");
-        c.header("Connection", "keep-alive");
-        c.header("Mcp-Session-Id", sessionId);
-        return c.text("");
+        return new Response("", {
+          headers: {
+            "Content-Type": "text/event-stream",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Mcp-Session-Id": sessionId,
+          },
+        });
       });
 
       // DELETE / — end session
