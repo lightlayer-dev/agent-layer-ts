@@ -360,6 +360,11 @@ pnpm build
 pnpm test    # 814 tests across 98 test files
 ```
 
+## See Also
+
+- **[LightLayer Gateway](https://github.com/lightlayer-dev/gateway)** — A standalone reverse proxy that makes any API agent-ready with zero code changes. Same features as agent-layer, but deployed as infrastructure instead of middleware.
+- **[agent-layer-python](https://github.com/lightlayer-dev/agent-layer-python)** — Python equivalent for FastAPI, Flask, and Django.
+
 ## License
 
 MIT — [LightLayer](https://company.lightlayer.dev)
