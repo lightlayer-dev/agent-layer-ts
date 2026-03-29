@@ -6,7 +6,7 @@
 
 export { scan } from "./scanner.js";
 export type { ScanOptions } from "./scanner.js";
-export { formatReport, formatJson, badgeUrl } from "./reporter.js";
+export { formatReport, formatJson, badgeUrl, badgeMarkdown } from "./reporter.js";
 export { allChecks } from "./checks/index.js";
 export type {
   CheckResult,

@@ -85,7 +85,16 @@ export function formatReport(report: ScoreReport): string {
 export function badgeUrl(score: number, label = "Agent-Ready"): string {
   const color =
     score >= 80 ? "brightgreen" : score >= 50 ? "yellow" : "red";
-  return `https://img.shields.io/badge/${encodeURIComponent(label)}-${score}%2F100-${color}`;
+  return `https://img.shields.io/badge/${encodeURIComponent(label)}-${score}%2F100-${color}?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0wIDE4Yy00LjQyIDAtOC0zLjU4LTgtOHMzLjU4LTggOC04IDggMy41OCA4IDgtMy41OCA4LTggOHoiLz48L3N2Zz4=&link=https://github.com/lightlayer-dev/agent-layer-ts`;
+}
+
+/**
+ * Generate the full markdown badge with link for READMEs.
+ * Links back to the agent-layer repo for brand attribution.
+ */
+export function badgeMarkdown(score: number, label = "Agent-Ready"): string {
+  const url = badgeUrl(score, label);
+  return `[![${label}: ${score}/100](${url})](https://github.com/lightlayer-dev/agent-layer-ts "Scored by @agent-layer/score")`;
 }
 
 /** Format report as JSON (for --json flag). */
