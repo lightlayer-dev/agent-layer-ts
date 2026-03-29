@@ -9,7 +9,7 @@
 import { Command } from "commander";
 import ora from "ora";
 import { scan } from "./scanner.js";
-import { formatReport, formatJson, badgeUrl } from "./reporter.js";
+import { formatReport, formatJson, badgeUrl, badgeMarkdown } from "./reporter.js";
 
 const program = new Command();
 
@@ -38,8 +38,11 @@ program
       if (options.json) {
         console.log(formatJson(report));
       } else if (options.badge) {
+        console.log("Badge URL:");
         console.log(badgeUrl(report.score));
-        console.log(`\nMarkdown: ![Agent-Ready](${badgeUrl(report.score)})`);
+        console.log("\nMarkdown (copy to your README):");
+        console.log(badgeMarkdown(report.score));
+        console.log("\nScored by @agent-layer/score — https://github.com/lightlayer-dev/agent-layer-ts");
       } else {
         console.log(formatReport(report));
       }

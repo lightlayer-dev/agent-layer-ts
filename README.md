@@ -352,12 +352,28 @@ npx @agent-layer/score https://myapp.com
 
 Our automated tests spin up real HTTP servers and verify the score difference — a bare server scores **16/100** while the same server with `agentLayer()` middleware scores **100/100**. See `packages/score/src/scanner-e2e.test.ts` for the full test.
 
+### Agent-Readiness Badge
+
+Add a badge to your README to show your API's agent-readiness score:
+
+```markdown
+[![Agent-Ready: 92/100](https://img.shields.io/badge/Agent--Ready-92%2F100-brightgreen)](https://github.com/lightlayer-dev/agent-layer-ts "Scored by @agent-layer/score")
+```
+
+The score CLI outputs the badge markdown automatically:
+
+```bash
+npx @agent-layer/score https://myapp.com --badge
+```
+
+Scored by [**@agent-layer/score**](https://github.com/lightlayer-dev/agent-layer-ts) from [LightLayer](https://company.lightlayer.dev).
+
 ## Development
 
 ```bash
 pnpm install
 pnpm build
-pnpm test    # 814 tests across 98 test files
+pnpm test    # 954 tests across 118 test files
 ```
 
 ## See Also
