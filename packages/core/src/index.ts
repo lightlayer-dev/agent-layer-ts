@@ -244,3 +244,19 @@ export {
   generateSecurityHeaders,
 } from "./security-headers.js";
 export type { SecurityHeadersConfig, SecurityHeaders } from "./security-headers.js";
+
+// ── Agent Onboarding ──────────────────────────────────────────────────
+export {
+  signWebhookPayload,
+  verifyWebhookSignature,
+  createOnboardingHandler,
+  SUPPORTED_CREDENTIAL_TYPES,
+} from "./agent-onboarding.js";
+export type {
+  OnboardingConfig,
+  RegistrationRequest,
+  RegistrationResponse,
+  Credential,
+  WebhookRequest,
+  AuthRequiredResponse,
+} from "./agent-onboarding.js";
