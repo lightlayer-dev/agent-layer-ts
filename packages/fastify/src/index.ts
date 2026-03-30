@@ -20,6 +20,7 @@ export { llmsTxtRoutes } from "./llms-txt.js";
 export { discoveryRoutes } from "./discovery.js";
 export { agentMeta } from "./agent-meta.js";
 export { agentAuth } from "./agent-auth.js";
+export { agentOnboarding } from "./agent-onboarding.js";
 export { agentAnalytics } from "./analytics.js";
 export type { AnalyticsConfig, AnalyticsInstance, AgentEvent } from "./analytics.js";
 export { apiKeyAuth, requireScope } from "./api-keys.js";
